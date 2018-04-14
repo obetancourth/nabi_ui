@@ -6,12 +6,15 @@ describe('ProfileBuilder', () => {
   let wrapper: any;
   let classes: object;
   let theme: object;
+  let changeAvatar: any;
 
   beforeEach(() => {
+    changeAvatar = (email: string, avatar: string): void => { console.log( avatar ); };
     wrapper = shallow(
-      <ProfileBuilder 
+      <ProfileBuilder
         classes={classes}
         theme={theme}
+        changeAvatar={changeAvatar}
       />
     );
   });

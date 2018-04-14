@@ -24,6 +24,7 @@ const styles = (theme: Theme) => ({
 interface ProfileBuilderProps {
   classes: any;
   theme: any;
+  changeAvatar(email: string, avatar: string): void;
 }
 
 interface ProfileBuilderState {
@@ -35,10 +36,10 @@ function getSteps() {
   return ['Basic Info', 'Education', 'Experience', 'Qualifications', 'Recommendations'];
 }
 
-function getStepContent(stepIndex: any) {
+function getStepContent(stepIndex: any, props: any) {
   switch (stepIndex) {
     case 0:
-      return <BasicInfo />;
+      return <BasicInfo changeAvatar={props.changeAvatar} />;
     case 1:
       return '';
     case 2:
@@ -53,7 +54,7 @@ function getStepContent(stepIndex: any) {
 }
 
 export class ProfileBuilder extends React.Component
-<ProfileBuilderProps & WithStyles<'button' | 'completed' | 'instructions'>, ProfileBuilderState> { 
+<ProfileBuilderProps & WithStyles<'button' | 'completed' | 'instructions'>, ProfileBuilderState> {
   constructor(props: ProfileBuilderProps ) {
     super(props);
 
@@ -61,6 +62,8 @@ export class ProfileBuilder extends React.Component
       activeStep: 0,
       completed: {}
     };
+
+    this.renderDesktopButtons = this.renderDesktopButtons.bind(this);
   }
 
   completedSteps() {
@@ -162,8 +165,8 @@ export class ProfileBuilder extends React.Component
           </div>
         ) : (
           <div>
-            {getStepContent(activeStep)}
-            
+            {getStepContent(activeStep, this.props)}
+
             <div>
               <Button
                 disabled={activeStep === 0}
@@ -223,16 +226,16 @@ export class ProfileBuilder extends React.Component
     );
   }
 
-  public render(): JSX.Element {    
+  public render(): JSX.Element {
     return (
       <div className="nabi-container">
         <Typography variant="title" className="nabi-margin-top-medium nabi-margin-bottom-medium">
           PROFILE BUILDER
         </Typography>
-      
+
         <div className="nabi-background-white nabi-section">
           {this.renderMobileStepper()}
-          
+
           {this.renderDesktopStepper()}
 
           {this.renderDesktopButtons()}
@@ -243,3 +246,4 @@ export class ProfileBuilder extends React.Component
 }
 
 export default withStyles(styles, { withTheme: true })<ProfileBuilderProps>(ProfileBuilder);
+// export default ProfileBuilder;
