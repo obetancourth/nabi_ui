@@ -112,14 +112,9 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
       actions = (<Button color="primary" onClick={this.handleCrop} variant="raised">Change Photo</Button>);
     }
     const imgStyle = ( !this.state.isCropping ) ? {
-                                                  width: '260px',
-                                                  height: '260px',
-                                                  borderRadius: '50%',
+                                                  width: '140px',
+                                                  height: '140px',
                                                   maxWidth: '100%',
-                                                  borderWidth: '5px',
-                                                  borderColor: '#FFF',
-                                                  borderStyle: 'solid',
-                                                  boxShadow: '1px 2px 3px 1px #888',
                                                 } : { maxWidth: '100%' };
     return (
       <div>
