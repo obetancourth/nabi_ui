@@ -4,6 +4,7 @@ import * as logo from '../../../../assets/images/user-picture-2.png';
 import  '../../../../../node_modules/cropperjs/dist/cropper.min.css';
 import Button from 'material-ui/Button';
 import { Theme, withStyles, WithStyles } from 'material-ui/styles';
+import blur from './blur';
 
 interface CropprState {
   isLoading: boolean;
@@ -68,10 +69,22 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
           {
             aspectRatio: 1,
             minContainerHeight: 320,
+            minContainerWidth: 320,
+            modal: false,
             viewMode: 1,
             minCropBoxWidth: 150,
+            background: false,
           }
         );
+        this.imageHolder.addEventListener('ready', ( e: any ) => {
+          let crpCont = document.getElementsByClassName('cropper-container')[0];
+          let crpBgd = this.imageToDataUri( this.state.baseImage, 200, 200);
+          crpCont.setAttribute(
+                    'style',
+                    'min-width:320px;'
+                    + ' min-height:320px;background-size: cover; background-image: url(\''
+                    + crpBgd + '\')');
+        });
     }
   }
 
@@ -92,10 +105,11 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
       }
     ).toDataURL();
     if (newBase64) {
+      this.cropperInstance.clear();
       this.cropperInstance.destroy();
+      this.cropperInstance = null;
       this.setState({isCropping: false, baseImage: newBase64});
       if ( this.props.imageChanged ) {
-        console.log(this.props.imageChanged);
         this.props.imageChanged(newBase64);
       }
     }
@@ -104,6 +118,25 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
   componentDidMount() {
     // do Somenthing
   }
+
+  imageToDataUri(img: string, width: number, height: number ): string {
+
+    // create an off-screen canvas
+    let canvas = document.createElement('canvas');
+    let ctx: any = canvas.getContext('2d');
+    let imgObj = document.createElement('img');
+    imgObj.src = img;
+    canvas.width = width;
+    canvas.height = height;
+    if ( ctx ) {
+        ctx.drawImage(imgObj, 0, 0, width, height);
+        let imageData = ctx.getImageData(0, 0, width, height);
+        ctx.putImageData(blur(imageData, { amount: 2} ), 0, 0);
+      }
+
+    // encode image to data-uri with base64 version of compressed image
+    return canvas.toDataURL();
+}
 
   render() {
     let currentLogo = this.state.baseImage ;
@@ -115,7 +148,8 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
                                                   width: '140px',
                                                   height: '140px',
                                                   maxWidth: '100%',
-                                                } : { maxWidth: '100%' };
+                                                  borderRadius: '50%',
+                                                } : { maxWidth: '100%'};
     return (
       <div>
         <input
@@ -127,7 +161,7 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
           ref={(e) => { this.fileUpload = e; }}
           disabled={this.state.isCropping}
         />
-        <label style={{cursor: 'pointer'}} htmlFor="uloadImageFile">
+        <label style={{cursor: 'pointer', textAlign: 'center'}} htmlFor="uloadImageFile" className="inner_cropper">
              <img ref={(e) => { this.imageHolder = e; }} src={currentLogo} style={imgStyle}/>
         </label>
         <div style={{textAlign: 'right'}}>
