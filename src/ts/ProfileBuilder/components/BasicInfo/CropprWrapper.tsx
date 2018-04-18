@@ -68,8 +68,8 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
           this.imageHolder,
           {
             aspectRatio: 1,
-            minContainerHeight: 320,
-            minContainerWidth: 320,
+            minContainerHeight: 150,
+            minContainerWidth: 150,
             modal: false,
             viewMode: 1,
             minCropBoxWidth: 150,
@@ -78,11 +78,11 @@ class CropprWrapper extends React.Component<PropsWithStyles, CropprState> {
         );
         this.imageHolder.addEventListener('ready', ( e: any ) => {
           let crpCont = document.getElementsByClassName('cropper-container')[0];
-          let crpBgd = this.imageToDataUri( this.state.baseImage, 200, 200);
+          let crpBgd = this.imageToDataUri( this.state.baseImage, 150, 150);
           crpCont.setAttribute(
                     'style',
-                    'min-width:320px;'
-                    + ' min-height:320px;background-size: cover; background-image: url(\''
+                    'min-width:150px;'
+                    + ' min-height:150px;background-size: cover; background-image: url(\''
                     + crpBgd + '\')');
         });
     }
